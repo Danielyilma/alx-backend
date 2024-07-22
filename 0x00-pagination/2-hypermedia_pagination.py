@@ -42,3 +42,17 @@ class Server:
         '''returns the starting and end index of a page'''
         start_index = (page - 1) * page_size
         return (start_index, start_index + page_size)
+
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> List[List]:
+        '''return a dict that includes info about current page and the page'''
+        page_data = {'page': page, 'data': self.get_page(page, page_size)}
+        page_length = len(self.__dataset)
+        page_data['total_pages'] = math.ceil(page_length / page_size)
+        page_data['page_size'] = len(page_data['data'])
+
+        page_range = self.index_range(page, page_size)
+        page_data['next_page'] = page + 1 if page_range[1] <= page_length\
+            else None
+        page_data['prev_page'] = page - 1 if page_range[0] > 0 else None
+
+        return page_data

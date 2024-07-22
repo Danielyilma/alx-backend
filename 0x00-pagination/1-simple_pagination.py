@@ -31,6 +31,10 @@ class Server:
         assert type(page_size) is int and page_size > 0, "page must be postive"
 
         page_range = self.index_range(page, page_size)
+        data_length = len(self.__dataset)
+        if page_range[0] >= data_length or page_range[1] >= data_length:
+            return []
+
         return self.__dataset[page_range[0]:page_range[1]]
 
     def index_range(self, page: int, page_size: int) -> Tuple[int, int]:

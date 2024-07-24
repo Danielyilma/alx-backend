@@ -61,7 +61,7 @@ class LFUCache(BaseCaching):
 
     def get(self, key):
         '''get data from cache data attribute by the key'''
-        if key not in self.cache_data.keys():
+        if not key and key not in self.cache_data.keys():
             return None
 
         for i, item in enumerate(self.data_count):

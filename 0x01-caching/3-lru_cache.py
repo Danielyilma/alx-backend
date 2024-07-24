@@ -16,7 +16,7 @@ class LRUCache(BaseCaching):
 
     def put(self, key, item):
         '''
-            puts data to the cache with LRU replacement algorithm
+            puts data to the cache  with LRU replacement algorithm
         '''
         if len(self.cache_data) >= self.MAX_ITEMS and \
                 key not in self.cache_data.keys():

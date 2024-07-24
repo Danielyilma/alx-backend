@@ -10,6 +10,7 @@ class LFUCache(BaseCaching):
             put and get method for the cache
     '''
     def __init__(self):
+        '''initialize attributes'''
         # holds tuple of key and frequncy usage
         self.data_count = []
         # counter

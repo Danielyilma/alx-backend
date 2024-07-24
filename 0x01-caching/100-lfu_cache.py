@@ -22,7 +22,7 @@ class LFUCache(BaseCaching):
         '''
             puts data to the cache with LFU replacement algorithm
         '''
-        if not key and not item:
+        if not key or not item:
             return
         # checking if the cache is full
         if len(self.cache_data) >= self.MAX_ITEMS \

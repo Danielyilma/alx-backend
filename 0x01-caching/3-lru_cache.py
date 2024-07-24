@@ -16,7 +16,7 @@ class LRUCache(BaseCaching):
 
     def put(self, key, item):
         '''
-            puts data to the cache  with LRU replacement algorithm
+            puts data to the cache with LRU replacement algorithm
         '''
         if len(self.cache_data) >= self.MAX_ITEMS and \
                 key not in self.cache_data.keys():
@@ -49,5 +49,4 @@ class LRUCache(BaseCaching):
             del self.counts[num]
             self.count += 1
             self.counts[self.count] = key
-        print(self.counts, key)
         return self.cache_data.get(key, None)

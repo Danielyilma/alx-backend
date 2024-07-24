@@ -45,15 +45,14 @@ class LFUCache(BaseCaching):
         # checking if the cache is full and the key to
         # be added is already in the cache
         elif key in self.cache_data.keys():
-            for i, item in enumerate(self.data_count):
-                if item[0] == key:
+            for i, value in enumerate(self.data_count):
+                if value[0] == key:
                     self.count += 1
                     self.data_count[i] = (
                         key, self.data_count[i][1] + 1, self.count
                     )
 
-            self.count += 1
-            self.cache_data[key] = [item, self.count]
+            self.cache_data[key] = item
             return
         # adding the key, count frequency and usage order to a list
         self.count += 1

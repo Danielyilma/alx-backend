@@ -23,19 +23,20 @@ app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
 
-
+@babel.locale_selector
 def get_locale():
     '''function to be invoked for each request'''
     if request.args.get("locale") in app.config["LANGUAGES"]:
         return request.args.get("locale")
     elif g.user:
         return g.user.get("locale")
-    elif request:
-        return request.accept_languages.best_match(
-            app.config["LANGUAGES"]
-        )
-    else:
-        return app.config['BABEL_DEFAULT_LOCALE']
+
+    locale = request.accept_languages.best_match(
+        app.config["LANGUAGES"]
+    )
+    if locale:
+        return locale
+    return app.config['BABEL_DEFAULT_LOCALE']
 
 
 def get_user():
@@ -55,7 +56,6 @@ def before_request():
 @app.route("/")
 def index():
     '''index page'''
-    print(request.accept_languages)
     return render_template("5-index.html")
 
 

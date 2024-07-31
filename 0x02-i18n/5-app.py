@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
-''' Flask app '''
-
-from flask import Flask, request, render_template, g
-from flask_babel import Babel, gettext
-
-app = Flask(__name__)
-babel = Babel(app)
+'''adding a babel configration'''
+from flask import Flask, render_template, request, g
+from flask_babel import Babel
 
 
-class Config:
-    ''' App config '''
-    LANGUAGES = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = "en"
-    BABEL_DEFAULT_TIMEZONE = "UTC"
-
-
-app.config.from_object(Config)
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -24,35 +12,48 @@ users = {
 }
 
 
-@app.before_request
-def before_request():
-    ''' def before request '''
-    g.user = get_user()
+class Config:
+    '''Babel config class'''
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
+
+
+app = Flask(__name__)
+app.config.from_object(Config)
+babel = Babel(app)
 
 
 @babel.localeselector
 def get_locale():
-    ''' return best languages '''
-    locale = request.args.get('locale')
-    if locale:
-        return locale
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
-@app.route("/", methods=["GET"], strict_slashes=False)
-def hello_world():
-    ''' return the template '''
-    return render_template('5-index.html')
+    '''function to be invoked for each request'''
+    if request.args.get("locale") in app.config["LANGUAGES"]:
+        return request.args.get("locale")
+    return request.accept_languages.best_match(
+        app.config["LANGUAGES"]
+    )
 
 
 def get_user():
-    ''' return the right dictionary '''
-    Id = request.args.get('login_as')
-    if Id and int(Id) in users:
-        return users[int(Id)]
-    else:
-        return None
+    '''function to get the current user'''
+    user_id = request.args.get("login_as")
+    if user_id:
+        return users.get(int(user_id), None)
+    return None
 
 
-if __name__ == '__main__':
-    app.run()
+@app.before_request
+def before_request():
+    '''runnes before every request is processed'''
+    g.user = get_user()
+
+
+@app.route("/")
+def index():
+    '''index page'''
+    print(g.user)
+    return render_template("5-index.html")
+
+
+if __name__ == "__main__":
+    app.run(host="localhost", port=5000, debug=True)
